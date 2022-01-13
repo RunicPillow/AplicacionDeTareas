@@ -12,13 +12,13 @@
                                 <button v-on:click="agregarTarea()" class="btn btn-success btn-lg">Agregar</button>    
                             </div>
                         </div>
-                        <br>
+                        <br>                       
                         <ul class="listgroup">
-                            <li class="list-group-item d-flex justify-content-between">
-                               <span class="cursor">
-                                   <i class="far fa-circle"></i>
-                               </span>
-                                Hacer la tarea
+                            <li v-for="(tarea, index) of listTareas" :key="index" class="list-group-item d-flex justify-content-between">
+                                <span class="cursor">
+                                    <i class="far fa-circle"></i>
+                                </span>
+                                {{ tarea.nombre}}
                                 <span class="text-danger cursor">
                                     <i class="fas fa-trash-alt"></i>
                                 </span>
@@ -49,8 +49,6 @@
                 this.listTareas.push(tarea);
                 this.tarea = '';    
             }
-
-
         }
     }
 </script>
