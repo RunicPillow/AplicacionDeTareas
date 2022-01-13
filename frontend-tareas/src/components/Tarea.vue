@@ -45,8 +45,11 @@
                 const tarea = { 
                     nombre: this.tarea,
                     estado: false
-                }    
+                }
+                this.listTareas.push(tarea);
+                this.tarea = '';    
             }
+
 
         }
     }
