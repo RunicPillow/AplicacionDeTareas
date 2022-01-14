@@ -14,9 +14,7 @@
                         </div>
                         <br>
                         <h4 v-if="listTareas.length == 0" >No hay tareas para realizar</h4>                       
-                        
-                        {{ listTareas }}
-                        
+                                                
                         <ul class="listgroup">
                             <li v-for="(tarea, index) of listTareas" :key="index" class="list-group-item d-flex justify-content-between">
                                 <span class="cursor" v-bind:class="{'text-success' : tarea.estado}"
