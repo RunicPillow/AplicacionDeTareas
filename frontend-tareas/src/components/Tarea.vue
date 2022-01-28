@@ -13,16 +13,22 @@
                             </div>
                         </div>
                         <br>
+                        <div class="text-center">
+                            <div v-if="loading" class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
                         <h4 v-if="listTareas.length == 0" >No hay tareas para realizar</h4>                       
                                                 
-                        <ul class="listgroup">
+                        <ul v-if="!loading" class="listgroup">
                             <li v-for="(tarea, index) of listTareas" :key="index" class="list-group-item d-flex justify-content-between">
                                 <span class="cursor" v-bind:class="{'text-success' : tarea.estado}"
                                 v-on:click="editarTarea(tarea, index)">
                                     <i v-bind:class="[tarea.estado ? 'fas fa-check-circle' : 'far fa-circle']"></i>
                                 </span>
                                 {{ tarea.nombre }}
-                                <span class="text-danger cursor" v-on:click="eliminarTarea(index)">
+                                <span class="text-danger cursor" v-on:click="eliminarTarea(tarea.id)">
                                     <i class="fas fa-trash-alt"></i>
                                 </span>
                             </li>    
@@ -42,7 +48,8 @@ import axios from "axios"
         data() {
             return {
                 tarea: '',
-                listTareas: []     
+                listTareas: [],
+                loading: false     
             }   
         },
         methods: { 
@@ -51,11 +58,29 @@ import axios from "axios"
                     nombre: this.tarea,
                     estado: false
                 }
-                this.listTareas.push(tarea);
+                // this.listTareas.push(tarea);
+                this.loading = true;
+                axios.post("https://localhost:44319/api/Tarea/", tarea).then(response => {
+                    console.log(response);
+                    this.loading = false;  
+                    this.obtenerTareas();  
+                }).catch(error => {
+                    console.error(error);
+                    this.loading = false;    
+                })
                 this.tarea = '';    
             },
-            eliminarTarea(index) {
-                this.listTareas.splice(index, 1)    
+            eliminarTarea(id) {
+                // this.listTareas.splice(index, 1)
+                this.loading = true;
+                axios.delete("https://localhost:44319/api/Tarea/" + id).then(response => {
+                    console.log(response);
+                    this.obtenerTareas();
+                    this.loading = false;
+                }).catch(error => {
+                    console.log(error);
+                    this.loading = false;
+                });            
             },
             editarTarea(tarea, index) { 
                 this.listTareas[index].estado = !tarea.estado;    
