@@ -24,7 +24,7 @@
                         <ul v-if="!loading" class="listgroup">
                             <li v-for="(tarea, index) of listTareas" :key="index" class="list-group-item d-flex justify-content-between">
                                 <span class="cursor" v-bind:class="{'text-success' : tarea.estado}"
-                                v-on:click="editarTarea(tarea, index)">
+                                v-on:click="editarTarea(tarea, tareea.id)">
                                     <i v-bind:class="[tarea.estado ? 'fas fa-check-circle' : 'far fa-circle']"></i>
                                 </span>
                                 {{ tarea.nombre }}
@@ -82,14 +82,24 @@ import axios from "axios"
                     this.loading = false;
                 });            
             },
-            editarTarea(tarea, index) { 
-                this.listTareas[index].estado = !tarea.estado;    
+            editarTarea(tarea, id) { 
+                // this.listTareas[index].estado = !tarea.estado;   
+                this.loading = true;
+                axios.put("https://localhost:44319/api/Tarea/" + id, tarea).then(() => {                     
+                    this.loading = false;
+                    this.obtenerTareas();   
+                }).catch(error => {
+                    console.log(error);
+                    this.loading = false;
+                })         
             },
             obtenerTareas() {
+                this.loading = true;
                 axios.get("https://localhost:44319/api/Tarea").then(response => {
                     console.log(response);
                     this.listTareas = response.data;
-                })
+                    this.loading = false;
+                }).catch(() => this.loading = false);
             }
         },
         created: function() {
